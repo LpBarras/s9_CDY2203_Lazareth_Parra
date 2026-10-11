@@ -8,8 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.duoc.backend.LoginDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class LoginControllerUnitTest {
@@ -33,7 +35,7 @@ class LoginControllerUnitTest {
 
     @Test
     void shouldLoginSuccessfully() {
-        User request = new User();
+        LoginDTO request = new LoginDTO();
         request.setUsername("prueba");
         request.setPassword("123456");
 
@@ -50,7 +52,7 @@ class LoginControllerUnitTest {
 
     @Test
     void shouldRejectInvalidPassword() {
-        User request = new User();
+       LoginDTO request = new LoginDTO();
         request.setUsername("prueba");
         request.setPassword("incorrecta");
 

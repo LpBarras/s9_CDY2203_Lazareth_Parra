@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import java.util.ArrayList;
 
 @Service
 public class InvoiceService {
@@ -71,4 +72,53 @@ public class InvoiceService {
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
     }
+
+    public Invoice saveInvoice(InvoiceDTO dto) {
+
+    Invoice invoice = new Invoice();
+
+    invoice.setDate(dto.getDate());
+    invoice.setTime(dto.getTime());
+    invoice.setPatientName(dto.getPatientName());
+
+    List<Care> cares = new ArrayList<>();
+    List<Medication> medications = new ArrayList<>();
+
+    // Buscar las atenciones existentes
+    if (dto.getCares() != null) {
+        for (InvoiceDTO.IdDTO item : dto.getCares()) {
+
+            if (item == null || item.getId() == null) {
+                throw new IllegalArgumentException("ID de atención inválido.");
+            }
+
+            Care care = careRepository.findById(item.getId())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Atención no encontrada."));
+
+            cares.add(care);
+        }
+    }
+
+    // Buscar los medicamentos existentes
+    if (dto.getMedications() != null) {
+        for (InvoiceDTO.IdDTO item : dto.getMedications()) {
+
+            if (item == null || item.getId() == null) {
+                throw new IllegalArgumentException("ID de medicamento inválido.");
+            }
+
+            Medication medication = medicationRepository.findById(item.getId())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Medicamento no encontrado."));
+
+            medications.add(medication);
+        }
+    }
+
+    invoice.setCares(cares);
+    invoice.setMedications(medications);
+
+    return saveInvoice(invoice);
+}
 }

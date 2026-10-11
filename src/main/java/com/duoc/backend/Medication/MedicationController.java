@@ -23,9 +23,15 @@ public class MedicationController {
     }
 
     @PostMapping
-    public Medication saveMedication(@RequestBody Medication medication) {
-        return medicationService.saveMedication(medication);
-    }
+public Medication saveMedication(@RequestBody MedicationDTO dto) {
+
+    Medication medication = new Medication();
+
+    medication.setName(dto.getName());
+    medication.setCost(dto.getCost());
+
+    return medicationService.saveMedication(medication);
+}
 
     @DeleteMapping("/{id}")
     public void deleteMedication(@PathVariable Long id) {

@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import com.duoc.backend.care.CareDTO;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class CareControllerTest {
@@ -47,13 +50,24 @@ class CareControllerTest {
     }
 
     @Test
-    void shouldSaveCare() {
-        Care care = new Care("Consulta", 50.0);
-        when(careRepository.save(care)).thenReturn(care);
+void shouldSaveCare() {
+    CareDTO dto = new CareDTO();
+    dto.setName("Consulta");
+    dto.setCost(50.0);
 
-        assertSame(care, careController.saveCare(care));
-        verify(careRepository).save(care);
-    }
+    Care care = new Care("Consulta", 50.0);
+
+    when(careRepository.save(any(Care.class))).thenReturn(care);
+
+    Care result = careController.saveCare(dto);
+
+    assertSame(care, result);
+
+    verify(careRepository).save(argThat(c ->
+            c.getName().equals(dto.getName())
+            && c.getCost().equals(dto.getCost())
+    ));
+}
 
     @Test
     void shouldDeleteCare() {

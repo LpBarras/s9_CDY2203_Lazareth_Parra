@@ -7,11 +7,14 @@ import org.mockito.MockitoAnnotations;
 import com.duoc.backend.patient.PatientService;
 import com.duoc.backend.patient.PatientController;
 import com.duoc.backend.patient.Patient;
+import com.duoc.backend.patient.PatientDTO;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class PatientControllerTest {
@@ -81,24 +84,32 @@ class PatientControllerTest {
     }
 
     @Test
-    void testSavePatient() {
-        // Arrange
-        Patient patient = new Patient();
-        patient.setName("Firulais");
-        patient.setSpecies("Perro");
-        patient.setBreed("Labrador");
-        patient.setAge(5);
-        patient.setOwner("Juan Pérez");
+void testSavePatient() {
+    PatientDTO dto = new PatientDTO();
+    dto.setName("Firulais");
+    dto.setSpecies("Perro");
+    dto.setBreed("Labrador");
+    dto.setAge(5);
+    dto.setOwner("Juan Pérez");
 
-        when(patientService.savePatient(patient)).thenReturn(patient);
+    Patient patient = new Patient();
+    patient.setName("Firulais");
 
-        // Act
-        Patient result = patientController.savePatient(patient);
+    when(patientService.savePatient(any(Patient.class)))
+            .thenReturn(patient);
 
-        // Assert
-        assertEquals("Firulais", result.getName());
-        verify(patientService, times(1)).savePatient(patient);
-    }
+    Patient result = patientController.savePatient(dto);
+
+    assertEquals("Firulais", result.getName());
+
+    verify(patientService).savePatient(argThat(p ->
+            p.getName().equals(dto.getName())
+            && p.getSpecies().equals(dto.getSpecies())
+            && p.getBreed().equals(dto.getBreed())
+            && p.getAge() == dto.getAge()
+            && p.getOwner().equals(dto.getOwner())
+    ));
+}
 
     @Test
     void testDeletePatient() {

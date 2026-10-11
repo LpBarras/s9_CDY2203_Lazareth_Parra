@@ -23,10 +23,15 @@ public class CareController {
     }
 
     @PostMapping
-    public Care saveCare(@RequestBody Care service) {
-        return careRepository.save(service);
-    }
+public Care saveCare(@RequestBody CareDTO dto) {
 
+    Care care = new Care();
+
+    care.setName(dto.getName());
+    care.setCost(dto.getCost());
+
+    return careRepository.save(care);
+}
     @DeleteMapping("/{id}")
     public void deleteCare(@PathVariable Long id) {
         careRepository.deleteById(id);

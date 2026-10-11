@@ -23,9 +23,17 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public Appointment saveAppointment(@RequestBody Appointment appointment) {
-        return appointmentService.saveAppointment(appointment);
-    }
+public Appointment saveAppointment(@RequestBody AppointmentDTO dto) {
+
+    Appointment appointment = new Appointment();
+
+    appointment.setDate(dto.getDate());
+    appointment.setTime(dto.getTime());
+    appointment.setReason(dto.getReason());
+    appointment.setVeterinarian(dto.getVeterinarian());
+
+    return appointmentService.saveAppointment(appointment);
+}
 
     @DeleteMapping("/{id}")
     public void deleteAppointment(@PathVariable Long id) {

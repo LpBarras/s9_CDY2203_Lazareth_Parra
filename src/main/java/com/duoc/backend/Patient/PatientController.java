@@ -38,9 +38,18 @@ public String greetings(
     }
 
     @PostMapping
-    public Patient savePatient(@RequestBody Patient patient) {
-        return patientService.savePatient(patient);
-    }
+public Patient savePatient(@RequestBody PatientDTO dto) {
+
+    Patient patient = new Patient();
+
+    patient.setName(dto.getName());
+    patient.setSpecies(dto.getSpecies());
+    patient.setBreed(dto.getBreed());
+    patient.setAge(dto.getAge());
+    patient.setOwner(dto.getOwner());
+
+    return patientService.savePatient(patient);
+}
 
     @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable Long id) {

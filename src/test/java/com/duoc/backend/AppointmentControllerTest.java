@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import com.duoc.backend.appointment.AppointmentDTO;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class AppointmentControllerTest {
@@ -52,18 +56,28 @@ class AppointmentControllerTest {
 
         assertSame(appointment, appointmentController.getAppointmentById(1L));
     }
+@Test
+void shouldSaveAppointment() {
+    AppointmentDTO dto = new AppointmentDTO();
+    dto.setDate(LocalDate.of(2025, 4, 28));
+    dto.setTime(LocalTime.of(10, 30));
 
-    @Test
-    void shouldSaveAppointment() {
-        Appointment appointment = new Appointment();
-        appointment.setDate(LocalDate.of(2025, 4, 28));
-        appointment.setTime(LocalTime.of(10, 30));
-        when(appointmentService.saveAppointment(appointment)).thenReturn(appointment);
+    Appointment appointment = new Appointment();
+    appointment.setDate(dto.getDate());
+    appointment.setTime(dto.getTime());
 
-        assertSame(appointment, appointmentController.saveAppointment(appointment));
-        verify(appointmentService).saveAppointment(appointment);
-    }
+    when(appointmentService.saveAppointment(any(Appointment.class)))
+            .thenReturn(appointment);
 
+    Appointment result = appointmentController.saveAppointment(dto);
+
+    assertSame(appointment, result);
+
+    verify(appointmentService).saveAppointment(argThat(a ->
+            a.getDate().equals(dto.getDate())
+            && a.getTime().equals(dto.getTime())
+    ));
+}
     @Test
     void shouldDeleteAppointment() {
         appointmentController.deleteAppointment(1L);

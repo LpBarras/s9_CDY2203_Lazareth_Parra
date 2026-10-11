@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 import com.itextpdf.layout.element.Table;
 import com.duoc.backend.care.Care;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,9 +36,10 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public Invoice saveInvoice(@RequestBody Invoice invoice) {
-        return invoiceService.saveInvoice(invoice);
-    }
+public Invoice saveInvoice(@RequestBody InvoiceDTO dto) {
+
+    return invoiceService.saveInvoice(dto);
+}
 
     @DeleteMapping("/{id}")
     public void deleteInvoice(@PathVariable Long id) {
@@ -108,4 +109,5 @@ public class InvoiceController {
             return ResponseEntity.status(500).build();
         }
     }
+
 }

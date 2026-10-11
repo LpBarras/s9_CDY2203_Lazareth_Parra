@@ -8,10 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import com.duoc.backend.medication.MedicationDTO;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class MedicationControllerTest {
@@ -45,14 +48,26 @@ class MedicationControllerTest {
         assertSame(medication, medicationController.getMedicationById(1L));
     }
 
-    @Test
-    void shouldSaveMedication() {
-        Medication medication = new Medication("Antibiótico", 30.0);
-        when(medicationService.saveMedication(medication)).thenReturn(medication);
+   @Test
+void shouldSaveMedication() {
+    MedicationDTO dto = new MedicationDTO();
+    dto.setName("Antibiótico");
+    dto.setCost(30.0);
 
-        assertSame(medication, medicationController.saveMedication(medication));
-        verify(medicationService).saveMedication(medication);
-    }
+    Medication medication = new Medication("Antibiótico", 30.0);
+
+    when(medicationService.saveMedication(any(Medication.class)))
+            .thenReturn(medication);
+
+    Medication result = medicationController.saveMedication(dto);
+
+    assertSame(medication, result);
+
+    verify(medicationService).saveMedication(argThat(m ->
+            m.getName().equals(dto.getName())
+            && m.getCost().equals(dto.getCost())
+    ));
+}
 
     @Test
     void shouldDeleteMedication() {

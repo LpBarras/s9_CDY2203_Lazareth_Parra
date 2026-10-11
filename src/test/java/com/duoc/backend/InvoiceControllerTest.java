@@ -11,12 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import com.duoc.backend.Invoice.InvoiceDTO;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class InvoiceControllerTest {
@@ -68,20 +70,33 @@ class InvoiceControllerTest {
     }
 
     @Test
-    void testSaveInvoice() {
-        // Arrange
-        LocalDate date1 = LocalDate.parse("2025-04-28");
-        Invoice invoice = new Invoice(1L, "Patient1", date1, Arrays.asList(), Arrays.asList());
-        when(invoiceService.saveInvoice(invoice)).thenReturn(invoice);
+void testSaveInvoice() {
+    LocalDate date1 = LocalDate.parse("2025-04-28");
 
-        // Act
-        Invoice result = invoiceController.saveInvoice(invoice);
+    InvoiceDTO dto = new InvoiceDTO();
+    dto.setDate(date1);
+    dto.setPatientName("Patient1");
+    dto.setCares(Arrays.asList());
+    dto.setMedications(Arrays.asList());
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        verify(invoiceService, times(1)).saveInvoice(invoice);
-    }
+    Invoice invoice = new Invoice(
+            1L,
+            "Patient1",
+            date1,
+            Arrays.asList(),
+            Arrays.asList()
+    );
+
+    when(invoiceService.saveInvoice(any(InvoiceDTO.class)))
+            .thenReturn(invoice);
+
+    Invoice result = invoiceController.saveInvoice(dto);
+
+    assertNotNull(result);
+    assertEquals(1L, result.getId());
+
+    verify(invoiceService).saveInvoice(dto);
+}
 
     @Test
     void testDeleteInvoice() {
