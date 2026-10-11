@@ -13,6 +13,9 @@ public class Care {
     private String name;
     private Double cost;
 
+    public Care() {
+}
+
     public Care(String description, double cost) {
         this.name = description;
         this.cost = cost;

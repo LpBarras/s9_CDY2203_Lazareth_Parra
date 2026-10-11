@@ -13,6 +13,10 @@ public class Medication {
     private String name;
     private Double cost;
 
+    public Medication() {
+        
+    }
+
 
     public Medication(String name, double price) {
         this.name = name;
