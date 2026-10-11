@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -20,11 +21,12 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping("/register")
-    public String greetings(@RequestParam(value="name", defaultValue="World") String name) {
-        return "Hello {" + name + "}";
-    }
-
+   @GetMapping(value = "/register", produces = MediaType.TEXT_PLAIN_VALUE)
+   public String greetings(
+        @RequestParam(value = "name", defaultValue = "World") String name) {
+                return "Hello {" + name + "}";
+            }
+            
     @GetMapping
     public List<Patient> getAllPatients() {
         return (List<Patient>) patientService.getAllPatients();
