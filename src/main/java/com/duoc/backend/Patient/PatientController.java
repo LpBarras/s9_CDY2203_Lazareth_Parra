@@ -21,12 +21,12 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-   @GetMapping(value = "/register", produces = MediaType.TEXT_PLAIN_VALUE)
-   public String greetings(
+   @GetMapping(value = "/register", produces = "text/plain")
+public String greetings(
         @RequestParam(value = "name", defaultValue = "World") String name) {
-                return "Hello {" + name + "}";
-            }
-            
+
+    return "Hello {" + name + "}";
+}
     @GetMapping
     public List<Patient> getAllPatients() {
         return (List<Patient>) patientService.getAllPatients();
